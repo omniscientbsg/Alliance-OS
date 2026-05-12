@@ -119,10 +119,45 @@
   --aos-rose: #f43f5e;
   --aos-rose-glow: rgba(244,63,94,0.15);
 
+  /* Additional Alliance OS Tokens */
+  --aos-coral: #f97316;
+  --aos-coral-glow: rgba(249,115,22,0.15);
+  --aos-teal: #14b8a6;
+  --aos-teal-glow: rgba(20,184,166,0.15);
+  --aos-purple: #a855f7;
+  --aos-purple-glow: rgba(168,85,247,0.15);
+
   /* Glassmorphism */
   --glass-bg: rgba(255,255,255,0.7);
   --glass-border: rgba(255,255,255,0.4);
   --glass-blur: 16px;
+}
+
+/* ═══════════════════════════════════════════════
+   Dark Mode Variables
+   ═══════════════════════════════════════════════ */
+.dark {
+  --background: #0a0e1a;
+  --foreground: #e2e8f0;
+  --card: #111827;
+  --card-foreground: #e2e8f0;
+  --popover: #111827;
+  --popover-foreground: #e2e8f0;
+  --primary: #60a5fa;
+  --primary-foreground: #0a0e1a;
+  --secondary: #1e293b;
+  --secondary-foreground: #cbd5e1;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #34d399;
+  --accent-foreground: #0a0e1a;
+  --destructive: #fb7185;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #60a5fa;
+
+  --glass-bg: rgba(17,24,39,0.8);
+  --glass-border: rgba(255,255,255,0.08);
 }
 
 @layer base {
