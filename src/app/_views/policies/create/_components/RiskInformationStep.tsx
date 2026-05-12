@@ -1,0 +1,1 @@
+export function RiskInformationStep() { return <div className="p-4 border rounded-md">Risk Information Step</div> }

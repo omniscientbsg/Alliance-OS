@@ -1,26 +1,240 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ═══════════════════════════════════════════════
+   ALLIANCE OS — Design System Tokens
+   ═══════════════════════════════════════════════ */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Register Alliance OS Custom Colors */
+  --color-aos-navy: var(--aos-navy);
+  --color-aos-navy-light: var(--aos-navy-light);
+  --color-aos-navy-lighter: var(--aos-navy-lighter);
+  --color-aos-blue: var(--aos-blue);
+  --color-aos-blue-glow: var(--aos-blue-glow);
+  --color-aos-emerald: var(--aos-emerald);
+  --color-aos-emerald-glow: var(--aos-emerald-glow);
+  --color-aos-amber: var(--aos-amber);
+  --color-aos-amber-glow: var(--aos-amber-glow);
+  --color-aos-violet: var(--aos-violet);
+  --color-aos-violet-glow: var(--aos-violet-glow);
+  --color-aos-rose: var(--aos-rose);
+  --color-aos-rose-glow: var(--aos-rose-glow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Light Theme Defaults */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #1e293b;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #10b981;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #3b82f6;
+  
+  --chart-1: #3b82f6;
+  --chart-2: #10b981;
+  --chart-3: #f59e0b;
+  --chart-4: #8b5cf6;
+  --chart-5: #ec4899;
+  --radius: 0.75rem;
+
+  /* Sidebar styling (Dark) */
+  --sidebar: #0a0e1a;
+  --sidebar-foreground: #94a3b8;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(255,255,255,0.05);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255,255,255,0.1);
+  --sidebar-ring: #3b82f6;
+
+  /* Alliance OS Custom Tokens */
+  --aos-navy: #0a0e1a;
+  --aos-navy-light: #111827;
+  --aos-navy-lighter: #1a2236;
+  --aos-blue: #3b82f6;
+  --aos-blue-glow: rgba(59,130,246,0.15);
+  --aos-emerald: #10b981;
+  --aos-emerald-glow: rgba(16,185,129,0.15);
+  --aos-amber: #f59e0b;
+  --aos-amber-glow: rgba(245,158,11,0.15);
+  --aos-violet: #8b5cf6;
+  --aos-violet-glow: rgba(139,92,246,0.15);
+  --aos-rose: #f43f5e;
+  --aos-rose-glow: rgba(244,63,94,0.15);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255,255,255,0.7);
+  --glass-border: rgba(255,255,255,0.4);
+  --glass-blur: 16px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  html {
+    @apply font-sans scroll-smooth;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─── Glassmorphism Card ─── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
 }
+
+/* ─── Glow Effects ─── */
+.glow-blue { box-shadow: 0 0 20px var(--aos-blue-glow), 0 0 60px var(--aos-blue-glow); }
+.glow-emerald { box-shadow: 0 0 20px var(--aos-emerald-glow), 0 0 60px var(--aos-emerald-glow); }
+.glow-amber { box-shadow: 0 0 20px var(--aos-amber-glow), 0 0 60px var(--aos-amber-glow); }
+.glow-violet { box-shadow: 0 0 20px var(--aos-violet-glow), 0 0 60px var(--aos-violet-glow); }
+.glow-rose { box-shadow: 0 0 20px var(--aos-rose-glow), 0 0 60px var(--aos-rose-glow); }
+
+/* ─── Animated gradient border ─── */
+.gradient-border {
+  position: relative;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--aos-blue), var(--aos-emerald), var(--aos-violet));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ─── Pulse Dot ─── */
+.pulse-dot {
+  position: relative;
+}
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: var(--aos-emerald);
+  border-radius: 50%;
+  animation: pulse-ring 2s ease infinite;
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+  100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+
+/* ─── Shimmer Loading ─── */
+.shimmer {
+  background: linear-gradient(90deg, var(--aos-navy-light) 25%, var(--aos-navy-lighter) 50%, var(--aos-navy-light) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ─── Chart container subtle grid ─── */
+.chart-grid {
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ─── Smooth Page Transitions ─── */
+.page-enter {
+  animation: fadeSlideIn 0.3s ease-out;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Mini progress bar animation ─── */
+.progress-bar-fill {
+  animation: progressFill 1.2s ease-out forwards;
+}
+@keyframes progressFill {
+  from { width: 0%; }
+}
+
+/* ─── Status badges ─── */
+.badge-active { background: var(--aos-emerald-glow); color: var(--aos-emerald); border: 1px solid rgba(16,185,129,0.3); }
+.badge-pending { background: var(--aos-amber-glow); color: var(--aos-amber); border: 1px solid rgba(245,158,11,0.3); }
+.badge-expired { background: var(--aos-rose-glow); color: var(--aos-rose); border: 1px solid rgba(244,63,94,0.3); }
+.badge-info { background: var(--aos-blue-glow); color: var(--aos-blue); border: 1px solid rgba(59,130,246,0.3); }

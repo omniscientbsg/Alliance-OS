@@ -1,0 +1,1 @@
+export function CoveragesStep() { return <div className="p-4 border rounded-md">Coverages Step</div> }
