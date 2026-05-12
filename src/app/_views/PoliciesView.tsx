@@ -4,11 +4,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Shield, Search, Plus, Filter, FileText, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { PolicyDetailDrawer } from './components/PolicyDetailDrawer';
 import { IssuePolicyWizard } from './components/IssuePolicyWizard';
+import { QuotationWizard } from './components/QuotationWizard';
 
 export default function PoliciesView() {
   const [activeTab, setActiveTab] = useState('active');
   const [selectedPolicy, setSelectedPolicy] = useState<string | null>(null);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const [isQuotationOpen, setIsQuotationOpen] = useState(false);
 
   const policies = [
     { id: "P11/2025/100/5042", insured: "Acme Corp Ltd", type: "Fire & Perils", premium: "TZS 4,500,000", status: "Active", startDate: "2025-01-01", endDate: "2025-12-31" },
@@ -29,6 +31,12 @@ export default function PoliciesView() {
           <div className="flex gap-3">
             <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2">
               <Filter className="w-4 h-4" /> Filter
+            </button>
+            <button 
+              onClick={() => setIsQuotationOpen(true)}
+              className="px-4 py-2 bg-white border border-aos-blue/30 text-aos-blue rounded-lg text-sm font-medium hover:bg-aos-blue/5 transition-colors shadow-sm flex items-center gap-2"
+            >
+              <FileText className="w-4 h-4" /> New Quotation
             </button>
             <button 
               onClick={() => setIsWizardOpen(true)}
@@ -135,6 +143,11 @@ export default function PoliciesView() {
       <IssuePolicyWizard
         isOpen={isWizardOpen}
         onClose={() => setIsWizardOpen(false)}
+      />
+      
+      <QuotationWizard
+        isOpen={isQuotationOpen}
+        onClose={() => setIsQuotationOpen(false)}
       />
     </>
   );
