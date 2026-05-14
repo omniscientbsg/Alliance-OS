@@ -19,7 +19,8 @@ import {
   LogOut,
   Settings,
   Sparkles,
-  Layers
+  Layers,
+  Database
 } from 'lucide-react';
 
 const navItems = [
@@ -44,6 +45,7 @@ const navItems = [
     ai: true,
     items: [
       { href: "/product-builder", label: "Product Builder", icon: Sparkles },
+      { href: "/migration", label: "Magic Import", icon: Database },
       { href: "/masters", label: "System Setup", icon: Layers },
     ]
   },
