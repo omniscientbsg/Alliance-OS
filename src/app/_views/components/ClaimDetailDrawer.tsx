@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Drawer } from '@/components/ui/drawer';
-import { FileWarning, Calculator, Users, DollarSign, Activity, FileText, Camera, ShieldAlert, List, Clock, Scale, ArrowUpRight, Archive, Car, Stethoscope, Landmark, Layers } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { SurveyManagementPanel } from './SurveyManagementPanel';
+import { Bot, Mail, MessageSquare, Phone, FileText, CheckCircle2, AlertTriangle, ArrowRight, Camera, User, Download, Plus } from 'lucide-react';
 
 interface ClaimDetailDrawerProps {
   isOpen: boolean;
@@ -11,199 +10,185 @@ interface ClaimDetailDrawerProps {
 }
 
 export function ClaimDetailDrawer({ isOpen, onClose, claimId }: ClaimDetailDrawerProps) {
-  const [activeTab, setActiveTab] = useState('loss');
+  const [replyText, setReplyText] = useState('');
 
   if (!claimId) return null;
+
+  const timelineEvents = [
+    {
+      id: 1,
+      type: 'ai_insight',
+      time: 'Just now',
+      title: 'Alliance AI Assessment Complete',
+      content: 'Based on uploaded photos and telematics data, this claim is eligible for Fast-Track STP. Estimated repair cost (TZS 1.2M) is within the policy deductible (TZS 5M). Liability is clear. Recommend instant approval.',
+      icon: <Bot className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />,
+      bg: 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/30 dark:border-indigo-800'
+    },
+    {
+      id: 2,
+      type: 'whatsapp',
+      time: '10:45 AM',
+      title: 'Customer via WhatsApp',
+      content: 'Here are the photos of the bumper damage as requested.',
+      attachments: ['bumper_front.jpg', 'bumper_side.jpg'],
+      icon: <MessageSquare className="w-5 h-5 text-green-500 dark:text-green-400" />,
+      bg: 'bg-green-50 border-green-200 dark:bg-green-900/30 dark:border-green-800'
+    },
+    {
+      id: 3,
+      type: 'system',
+      time: '10:40 AM',
+      title: 'Automated Request Sent',
+      content: 'Alliance AI sent automated WhatsApp message requesting damage photos.',
+      icon: <FileText className="w-5 h-5 text-slate-500 dark:text-slate-400" />,
+      bg: 'bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700'
+    },
+    {
+      id: 4,
+      type: 'call',
+      time: '10:30 AM',
+      title: 'Voice Call (FNOL Logged)',
+      content: 'Customer reported a minor collision in a parking lot. No injuries. Third party was at fault but drove away. Transcript automatically logged.',
+      icon: <Phone className="w-5 h-5 text-aos-coral dark:text-orange-400" />,
+      bg: 'bg-orange-50 border-orange-200 dark:bg-orange-900/30 dark:border-orange-800'
+    }
+  ];
 
   return (
     <Drawer 
       isOpen={isOpen} 
       onClose={onClose} 
-      title={`Claim Ref: ${claimId}`}
-      subtitle="Fire Damage • Under Review"
+      title={
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <span className="font-bold text-xl text-slate-900 dark:text-slate-100">Case {claimId}</span>
+          <span className="px-2.5 py-1 bg-aos-emerald/10 dark:bg-aos-emerald/20 text-aos-emerald dark:text-emerald-400 text-xs font-bold rounded-md flex items-center gap-1 w-fit border border-aos-emerald/20">
+            <CheckCircle2 className="w-3 h-3" /> FAST-TRACK ELIGIBLE
+          </span>
+        </div>
+      }
+      subtitle="Omnichannel Case Timeline"
       size="xl"
     >
       <div className="flex flex-col md:flex-row gap-6 h-full">
-        <div className="w-full md:w-56 shrink-0 space-y-0.5 overflow-y-auto pr-2 pb-12">
-          <button onClick={() => setActiveTab('loss')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'loss' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><FileWarning className="w-4 h-4" /> Loss Details</span>
-          </button>
-          <button onClick={() => setActiveTab('reserves')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'reserves' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><DollarSign className="w-4 h-4" /> Financials</span>
-          </button>
-          <button onClick={() => setActiveTab('parties')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'parties' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Users className="w-4 h-4" /> Involved Parties</span>
-          </button>
-          <button onClick={() => setActiveTab('survey')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'survey' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Camera className="w-4 h-4" /> Survey Mgmt</span>
-          </button>
-          <button onClick={() => setActiveTab('documents')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'documents' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><FileText className="w-4 h-4" /> Documents</span>
-          </button>
-          <button onClick={() => setActiveTab('notes')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'notes' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><List className="w-4 h-4" /> Case Notes</span>
-          </button>
-          <button onClick={() => setActiveTab('police')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'police' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Car className="w-4 h-4" /> Police Report</span>
-          </button>
-          <button onClick={() => setActiveTab('medical')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'medical' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Stethoscope className="w-4 h-4" /> Medical Reports</span>
-          </button>
-          <button onClick={() => setActiveTab('recovery')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'recovery' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><ArrowUpRight className="w-4 h-4" /> Subrogation</span>
-          </button>
-          <button onClick={() => setActiveTab('salvage')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'salvage' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Archive className="w-4 h-4" /> Salvage Mgmt</span>
-          </button>
-          <button onClick={() => setActiveTab('payments')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'payments' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Calculator className="w-4 h-4" /> Payment History</span>
-          </button>
-          <button onClick={() => setActiveTab('reinsurance')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'reinsurance' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Layers className="w-4 h-4" /> Reinsurance</span>
-          </button>
-          <button onClick={() => setActiveTab('legal')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'legal' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Scale className="w-4 h-4" /> Legal</span>
-          </button>
-          <button onClick={() => setActiveTab('litigation')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'litigation' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Landmark className="w-4 h-4" /> Litigation</span>
-          </button>
-          <button onClick={() => setActiveTab('fraud')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'fraud' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><ShieldAlert className="w-4 h-4" /> Fraud & SIU</span>
-          </button>
-          <button onClick={() => setActiveTab('audit')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'audit' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> Audit Trail</span>
-          </button>
+        {/* Left Column: Context & AI */}
+        <div className="w-full md:w-[350px] shrink-0 space-y-6 overflow-y-auto pr-2 custom-scrollbar pb-12">
+          
+          {/* AI Briefing */}
+          <Card className="border-indigo-200 dark:border-indigo-900/50 shadow-sm overflow-hidden animate-in slide-in-from-left-4 duration-500 bg-white dark:bg-[#0f172a]">
+            <div className="bg-indigo-600 dark:bg-indigo-900/80 p-3 flex items-center gap-2">
+              <Bot className="w-5 h-5 text-white" />
+              <h3 className="font-semibold text-white text-sm">Alliance AI Briefing</h3>
+            </div>
+            <div className="p-4 bg-indigo-50/50 dark:bg-indigo-950/20 space-y-3 text-sm">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 text-aos-coral shrink-0 mt-0.5" />
+                <p className="text-slate-700 dark:text-slate-300"><strong>Fraud Risk: Low (12%)</strong>. Phone location matches accident site.</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <FileText className="w-4 h-4 text-aos-blue dark:text-blue-400 shrink-0 mt-0.5" />
+                <p className="text-slate-700 dark:text-slate-300"><strong>Policy Status: Active</strong>. 2 previous claims in 5 years.</p>
+              </div>
+              <div className="pt-3 border-t border-indigo-100 dark:border-indigo-900/50 mt-3">
+                <p className="font-medium text-indigo-900 dark:text-indigo-300 mb-2">Suggested Action:</p>
+                <button className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white rounded-lg font-medium text-sm transition-colors shadow-sm flex items-center justify-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" /> Approve TZS 1.2M Settlement
+                </button>
+              </div>
+            </div>
+          </Card>
+
+          {/* Quick Facts */}
+          <Card className="border-slate-200 dark:border-slate-800 p-4 space-y-4 bg-white dark:bg-[#0f172a]">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm">Case Details</h3>
+            <div className="space-y-3 text-sm">
+              <div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Customer</p>
+                <p className="font-medium text-slate-900 dark:text-slate-200 flex items-center gap-2 mt-0.5">
+                  <User className="w-4 h-4 text-slate-400 dark:text-slate-500" /> Sarah Jenkins
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Policy</p>
+                <p className="font-medium text-aos-blue dark:text-blue-400 mt-0.5 cursor-pointer hover:underline">P11/2026/Motor/1042</p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Loss Date</p>
+                <p className="font-medium text-slate-900 dark:text-slate-200 mt-0.5">14 May 2026, 10:15 AM</p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Initial Reserve</p>
+                <p className="font-medium text-slate-900 dark:text-slate-200 mt-0.5">TZS 1,500,000</p>
+              </div>
+            </div>
+          </Card>
         </div>
 
-        <div className="flex-1 min-w-0">
-          {activeTab === 'loss' && (
-            <div className="space-y-6 animate-in fade-in duration-300">
-              <Card className="p-5 border-slate-200 shadow-sm space-y-6">
-                <div className="grid grid-cols-2 gap-4 border-b border-slate-100 pb-4">
-                  <div>
-                    <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Policy Number</p>
-                    <p className="text-base font-semibold text-aos-blue mt-1">P11/2025/100/5042</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Insured Party</p>
-                    <p className="text-base font-semibold text-slate-900 mt-1">Acme Corp Ltd</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <p className="text-xs text-slate-500 mb-1">Date of Loss</p>
-                    <p className="text-sm font-medium text-slate-900">15 April 2026</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 mb-1">Date Intimated (FNOL)</p>
-                    <p className="text-sm font-medium text-slate-900">16 April 2026</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 mb-1">Cause of Loss Code</p>
-                    <p className="text-sm font-medium text-slate-900">F02 - Electrical Short Circuit</p>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-xs text-slate-500 mb-2">Loss Description</p>
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-sm text-slate-700 leading-relaxed">
-                    A fire broke out in the main server room on the 4th floor due to a suspected electrical fault in the AC unit. The fire was contained within 45 minutes by the internal sprinkler system, but significant water and smoke damage occurred to the adjacent IT equipment.
-                  </div>
-                </div>
-              </Card>
-            </div>
-          )}
-
-          {activeTab === 'reserves' && (
-            <div className="space-y-6 animate-in fade-in duration-300">
-              <div className="grid grid-cols-3 gap-4">
-                <Card className="p-4 border-slate-200 shadow-sm">
-                  <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Initial Reserve</p>
-                  <p className="text-xl font-bold text-slate-900 mt-1">TZS 25,000,000</p>
-                </Card>
-                <Card className="p-4 border-slate-200 shadow-sm bg-aos-amber/5 border-aos-amber/20">
-                  <p className="text-xs text-aos-amber uppercase tracking-wider font-semibold">Current/Revised Reserve</p>
-                  <p className="text-xl font-bold text-aos-amber mt-1">TZS 45,000,000</p>
-                </Card>
-                <Card className="p-4 border-slate-200 shadow-sm bg-aos-emerald/5 border-aos-emerald/20">
-                  <p className="text-xs text-aos-emerald uppercase tracking-wider font-semibold">Total Paid to Date</p>
-                  <p className="text-xl font-bold text-aos-emerald mt-1">TZS 0.00</p>
-                </Card>
-              </div>
-
-              <Card className="p-0 border-slate-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-slate-100 bg-slate-50/50">
-                  <h3 className="font-semibold text-slate-900">Financial History Log</h3>
-                </div>
-                <table className="w-full text-sm text-left">
-                  <thead className="bg-slate-50 text-slate-500 border-b border-slate-200">
-                    <tr>
-                      <th className="px-4 py-2 font-medium">Date</th>
-                      <th className="px-4 py-2 font-medium">Action</th>
-                      <th className="px-4 py-2 font-medium text-right">Amount</th>
-                      <th className="px-4 py-2 font-medium">User</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    <tr className="hover:bg-slate-50/50">
-                      <td className="px-4 py-3 text-slate-600">16 Apr 2026</td>
-                      <td className="px-4 py-3"><span className="px-2 py-0.5 rounded bg-slate-100 text-xs font-medium">Initial Reserve Creation</span></td>
-                      <td className="px-4 py-3 text-right font-medium">TZS 25,000,000</td>
-                      <td className="px-4 py-3 text-slate-500">System (Auto-FNOL)</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50">
-                      <td className="px-4 py-3 text-slate-600">20 Apr 2026</td>
-                      <td className="px-4 py-3"><span className="px-2 py-0.5 rounded bg-aos-amber/10 text-aos-amber text-xs font-medium">Reserve Revision Upwards</span></td>
-                      <td className="px-4 py-3 text-right font-medium">+ TZS 20,000,000</td>
-                      <td className="px-4 py-3 text-slate-500">J. Handler</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </Card>
-            </div>
-          )}
+        {/* Right Column: The Timeline */}
+        <div className="flex-1 flex flex-col h-[calc(100vh-140px)] min-w-0 bg-slate-50 dark:bg-[#0a0e1a] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
           
-          {activeTab === 'parties' && (
-            <div className="space-y-4 animate-in fade-in duration-300">
-              <Card className="p-4 border-slate-200 shadow-sm flex justify-between items-center">
-                 <div>
-                   <p className="text-xs font-semibold text-slate-500 uppercase">Assigned Surveyor</p>
-                   <p className="text-base font-medium text-slate-900">TopMark Loss Adjusters Ltd</p>
-                   <p className="text-sm text-slate-500">Report Status: Pending Final Review</p>
-                 </div>
-                 <button onClick={() => setActiveTab('survey')} className="px-3 py-1.5 text-sm font-medium text-aos-blue border border-aos-blue/20 rounded-lg hover:bg-aos-blue/5">Go to Survey Mgmt</button>
-              </Card>
-              <Card className="p-4 border-slate-200 shadow-sm flex justify-between items-center">
-                 <div>
-                   <p className="text-xs font-semibold text-slate-500 uppercase">Assigned Repairer/Contractor</p>
-                   <p className="text-base font-medium text-slate-900">Not Yet Assigned</p>
-                 </div>
-                 <button className="px-3 py-1.5 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50">Assign Now</button>
-              </Card>
-            </div>
-          )}
+          {/* Timeline Messages */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+            {timelineEvents.map((event) => (
+              <div key={event.id} className="flex gap-4 animate-in slide-in-from-bottom-4 duration-500" style={{ animationFillMode: 'both', animationDelay: `${event.id * 100}ms` }}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${event.bg} border`}>
+                  {event.icon}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-200">{event.title}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">{event.time}</span>
+                  </div>
+                  <Card className={`p-4 border shadow-sm ${event.bg}`}>
+                    <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{event.content}</p>
+                    
+                    {event.attachments && (
+                      <div className="mt-3 flex gap-2">
+                        {event.attachments.map((att, i) => (
+                          <div key={i} className="flex items-center gap-2 bg-white/60 dark:bg-black/20 px-3 py-1.5 rounded-md border border-black/5 dark:border-white/5 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-black/40 cursor-pointer transition-colors">
+                            <Camera className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                            {att}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </Card>
+                </div>
+              </div>
+            ))}
+          </div>
 
-          {activeTab === 'survey' && (
-            <div className="animate-in fade-in duration-300">
-              <SurveyManagementPanel />
+          {/* Omnichannel Reply Box */}
+          <div className="p-4 bg-white dark:bg-[#0f172a] border-t border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Reply via:</span>
+              <button className="px-3 py-1 text-xs font-medium bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-full border border-green-200 dark:border-green-800/50 flex items-center gap-1 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors">
+                <MessageSquare className="w-3 h-3" /> WhatsApp
+              </button>
+              <button className="px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <Mail className="w-3 h-3" /> Email
+              </button>
+              <button className="px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <FileText className="w-3 h-3" /> Internal Note
+              </button>
             </div>
-          )}
-
-          {activeTab === 'documents' && (
-            <div className="flex flex-col items-center justify-center h-full py-12 text-slate-500 animate-in fade-in duration-300">
-              <FileText className="w-12 h-12 text-slate-300 mb-4" />
-              <p>No additional documents uploaded.</p>
+            
+            <div className="relative">
+              <textarea 
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 pr-24 text-sm focus:outline-none focus:ring-2 focus:ring-aos-blue/50 focus:border-aos-blue resize-none h-24 custom-scrollbar text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                placeholder="Type a message or internal note. Use '/' to trigger Alliance AI commands..."
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+              />
+              <div className="absolute right-3 bottom-3 flex items-center gap-2">
+                <button className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+                  <Plus className="w-5 h-5" />
+                </button>
+                <button className="px-4 py-2 bg-aos-blue text-white rounded-lg text-sm font-medium hover:bg-aos-blue/90 shadow-sm transition-colors flex items-center gap-2">
+                  Send <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          )}
-
-          {activeTab === 'fraud' && (
-            <div className="flex flex-col items-center justify-center h-full py-12 text-slate-500 animate-in fade-in duration-300">
-              <ShieldAlert className="w-12 h-12 text-aos-emerald/50 mb-4" />
-              <h3 className="text-lg font-semibold text-slate-900 mb-1">No Fraud Indicators Detected</h3>
-              <p>The AI system scores this claim at 12/100 (Low Risk).</p>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </Drawer>
