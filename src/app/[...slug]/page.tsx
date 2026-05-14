@@ -11,6 +11,7 @@ import AnalyticsView from "../_views/AnalyticsView";
 import MastersView from "../_views/MastersView";
 import ApprovalsView from "../_views/ApprovalsView";
 import SettingsView from "../_views/SettingsView";
+import BrokerPortalView from "../_views/BrokerPortalView";
 
 // We will render placeholders for unknown views for now
 const PlaceholderView = ({ title }: { title: string }) => (
@@ -37,6 +38,7 @@ export default function CatchAllPage({ params }: { params: Promise<{ slug: strin
     if (path.startsWith('/approvals')) return <ApprovalsView />;
     if (path.startsWith('/analytics')) return <AnalyticsView />;
     if (path.startsWith('/settings')) return <SettingsView />;
+    if (path.startsWith('/broker')) return <BrokerPortalView />;
     
     if (path.startsWith('/dashboard') || path === '/') {
       return <DashboardView />;

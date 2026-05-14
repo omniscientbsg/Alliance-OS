@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Drawer } from '@/components/ui/drawer';
-import { FileText, Shield, CreditCard, Clock, CheckCircle2, ChevronRight, Calculator, FileCheck } from 'lucide-react';
+import { FileText, Shield, CreditCard, Clock, CheckCircle2, ChevronRight, Calculator, FileCheck, XCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { EndorsementWizard } from './EndorsementWizard';
+import { CancellationModal } from './CancellationModal';
+import { PolicySchedulePreview } from './PolicySchedulePreview';
 
 interface PolicyDetailDrawerProps {
   isOpen: boolean;
@@ -11,6 +14,9 @@ interface PolicyDetailDrawerProps {
 
 export function PolicyDetailDrawer({ isOpen, onClose, policyId }: PolicyDetailDrawerProps) {
   const [activeTab, setActiveTab] = useState('summary');
+  const [isEndorsementWizardOpen, setIsEndorsementWizardOpen] = useState(false);
+  const [isCancellationModalOpen, setIsCancellationModalOpen] = useState(false);
+  const [isSchedulePreviewOpen, setIsSchedulePreviewOpen] = useState(false);
 
   if (!policyId) return null;
 
@@ -59,6 +65,15 @@ export function PolicyDetailDrawer({ isOpen, onClose, policyId }: PolicyDetailDr
         <div className="flex-1 min-w-0">
           {activeTab === 'summary' && (
             <div className="space-y-6 animate-in fade-in duration-300">
+              <div className="flex justify-between items-center pb-4 border-b border-slate-100">
+                <h3 className="font-semibold text-slate-900">Policy Summary</h3>
+                <button 
+                  onClick={() => setIsSchedulePreviewOpen(true)}
+                  className="px-3 py-1.5 bg-aos-blue/10 text-aos-blue rounded-lg text-sm font-medium hover:bg-aos-blue/20 transition-colors flex items-center gap-2"
+                >
+                  <FileText className="w-4 h-4" /> View Schedule
+                </button>
+              </div>
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
@@ -165,8 +180,17 @@ export function PolicyDetailDrawer({ isOpen, onClose, policyId }: PolicyDetailDr
 
           {activeTab === 'endorsements' && (
             <div className="space-y-4 animate-in fade-in duration-300">
-              <div className="flex justify-end">
-                <button className="px-3 py-1.5 bg-aos-blue text-white rounded text-sm font-medium hover:bg-aos-blue/90 transition-colors shadow-sm">
+              <div className="flex justify-end gap-3">
+                <button 
+                  onClick={() => setIsCancellationModalOpen(true)}
+                  className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 rounded text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2"
+                >
+                  <XCircle className="w-4 h-4 text-aos-rose" /> Cancel Policy
+                </button>
+                <button 
+                  onClick={() => setIsEndorsementWizardOpen(true)}
+                  className="px-3 py-1.5 bg-aos-blue text-white rounded text-sm font-medium hover:bg-aos-blue/90 transition-colors shadow-sm"
+                >
                   + Pass Endorsement
                 </button>
               </div>
@@ -194,6 +218,26 @@ export function PolicyDetailDrawer({ isOpen, onClose, policyId }: PolicyDetailDr
           )}
         </div>
       </div>
+      
+      {policyId && (
+        <>
+          <EndorsementWizard
+            isOpen={isEndorsementWizardOpen}
+            onClose={() => setIsEndorsementWizardOpen(false)}
+            policyId={policyId}
+          />
+          <CancellationModal
+            isOpen={isCancellationModalOpen}
+            onClose={() => setIsCancellationModalOpen(false)}
+            policyId={policyId}
+          />
+          <PolicySchedulePreview
+            isOpen={isSchedulePreviewOpen}
+            onClose={() => setIsSchedulePreviewOpen(false)}
+            policyId={policyId}
+          />
+        </>
+      )}
     </Drawer>
   );
 }

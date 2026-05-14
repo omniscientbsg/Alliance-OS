@@ -44,6 +44,12 @@ const navItems = [
       { href: "/masters", label: "System Setup", icon: Building },
       { href: "/approvals", label: "Approvals", icon: FileCheck },
     ]
+  },
+  {
+    group: "Ecosystem",
+    items: [
+      { href: "/broker", label: "Broker Portal", icon: HeartHandshake },
+    ]
   }
 ];
 

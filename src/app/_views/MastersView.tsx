@@ -1,14 +1,111 @@
 import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Settings, Plus, Search, Layers, Calculator, FileText, ArrowRightLeft, Shield, Save, GitBranch, FileCode2, BookOpen, KeySquare } from "lucide-react";
+import { Settings, Plus, Search, Layers, Calculator, FileText, ArrowRightLeft, Shield, Save, GitBranch, FileCode2, BookOpen, KeySquare, ChevronDown, ChevronRight, Wrench } from "lucide-react";
+
+import { BilingualField } from '@/components/ui/bilingual-field';
 
 export default function MastersView() {
   const [activeTab, setActiveTab] = useState('product');
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['product_uw']);
+
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(categoryId) ? prev.filter(id => id !== categoryId) : [...prev, categoryId]
+    );
+  };
+
+  const masterCategories = [
+    {
+      id: 'product_uw',
+      title: 'Product & Underwriting',
+      icon: <Layers className="w-4 h-4" />,
+      items: [
+        { id: 'product', title: 'Product & Flex Setup' },
+        { id: 'rating', title: 'Rating Engine Setup' },
+        { id: 'coverage', title: 'Coverage Master' },
+        { id: 'deductible', title: 'Deductibles Master' },
+        { id: 'clauses', title: 'Clauses & Warranties' },
+        { id: 'occupations', title: 'Occupations Master' },
+        { id: 'vehicle_make', title: 'Vehicle Make/Model' },
+        { id: 'geography', title: 'Geographical Zones' },
+      ]
+    },
+    {
+      id: 'finance',
+      title: 'Finance & Accounting',
+      icon: <Calculator className="w-4 h-4" />,
+      items: [
+        { id: 'tax', title: 'Tax & Charges' },
+        { id: 'gl_codes', title: 'GL Transaction Codes' },
+        { id: 'chart_accounts', title: 'Chart of Accounts' },
+        { id: 'banks', title: 'Bank Master' },
+        { id: 'exchange_rates', title: 'Exchange Rates' },
+        { id: 'payment_terms', title: 'Payment Terms' },
+        { id: 'cost_centers', title: 'Cost Centers' },
+        { id: 'budget', title: 'Budget Allocation' },
+      ]
+    },
+    {
+      id: 'reinsurance',
+      title: 'Reinsurance',
+      icon: <ArrowRightLeft className="w-4 h-4" />,
+      items: [
+        { id: 'ri', title: 'Non-Proportional (XOL)' },
+        { id: 'ri_prop', title: 'Proportional Treaties' },
+        { id: 'reinsurers', title: 'Reinsurer Master' },
+        { id: 'ri_brokers', title: 'RI Broker Master' },
+        { id: 'ri_commission', title: 'RI Commission Setup' },
+        { id: 'pool', title: 'Pool Arrangements' },
+        { id: 'ri_pools', title: 'Retrocession Setup' },
+        { id: 'ri_ratings', title: 'Security Ratings' },
+      ]
+    },
+    {
+      id: 'claims_ops',
+      title: 'Claims & Operations',
+      icon: <BookOpen className="w-4 h-4" />,
+      items: [
+        { id: 'doc_policy', title: 'Policy Docs Setup' },
+        { id: 'doc_claims', title: 'Claims Docs Setup' },
+        { id: 'surveyors', title: 'Surveyors Master' },
+        { id: 'loss_adjusters', title: 'Loss Adjusters' },
+        { id: 'repairers', title: 'Garages / Repairers' },
+        { id: 'lawyers', title: 'Legal Counsel' },
+        { id: 'salvage_buyers', title: 'Salvage Buyers' },
+        { id: 'medical', title: 'Medical Providers' },
+      ]
+    },
+    {
+      id: 'organization',
+      title: 'Organization Setup',
+      icon: <Shield className="w-4 h-4" />,
+      items: [
+        { id: 'branches', title: 'Branch Master' },
+        { id: 'departments', title: 'Departments' },
+        { id: 'users', title: 'Users & Roles' },
+        { id: 'workflows', title: 'Approval Workflows' },
+        { id: 'brokers', title: 'Broker / Agency Master' },
+        { id: 'sales_execs', title: 'Sales Executives' },
+        { id: 'audit', title: 'Audit Trail Settings' },
+        { id: 'system', title: 'System Parameters' },
+      ]
+    }
+  ];
+
+  const getActiveTabTitle = () => {
+    for (const cat of masterCategories) {
+      const item = cat.items.find(i => i.id === activeTab);
+      if (item) return item.title;
+    }
+    return 'Configuration';
+  };
+
+  const detailedTabs = ['product', 'rating', 'tax', 'ri', 'doc_policy', 'doc_claims', 'gl_codes'];
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="space-y-6 animate-in fade-in duration-500 h-full flex flex-col">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">System Setup Engine</h1>
           <p className="text-sm text-slate-500 mt-1">Configure products, rating engines, taxes, and reinsurance treaties.</p>
@@ -23,55 +120,52 @@ export default function MastersView() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-6 flex-1 min-h-0 pb-8">
         {/* Sidebar Nav */}
-        <div className="w-full md:w-64 space-y-2 shrink-0">
-          <button 
-            onClick={() => setActiveTab('product')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium border transition-colors flex items-center gap-3 ${activeTab === 'product' ? 'bg-aos-purple/10 text-aos-purple border-aos-purple/20' : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'}`}
-          >
-            <Layers className={`w-4 h-4 ${activeTab === 'product' ? 'text-aos-purple' : 'text-slate-400'}`} /> Product & Flex Setup
-          </button>
-          <button 
-            onClick={() => setActiveTab('rating')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium border transition-colors flex items-center gap-3 ${activeTab === 'rating' ? 'bg-aos-purple/10 text-aos-purple border-aos-purple/20' : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'}`}
-          >
-            <Calculator className={`w-4 h-4 ${activeTab === 'rating' ? 'text-aos-purple' : 'text-slate-400'}`} /> Rating Engine
-          </button>
-          <button 
-            onClick={() => setActiveTab('tax')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium border transition-colors flex items-center gap-3 ${activeTab === 'tax' ? 'bg-aos-amber/10 text-aos-amber border-aos-amber/20' : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'}`}
-          >
-            <FileText className={`w-4 h-4 ${activeTab === 'tax' ? 'text-aos-amber' : 'text-slate-400'}`} /> Tax & Charges
-          </button>
-          <button 
-            onClick={() => setActiveTab('ri')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium border transition-colors flex items-center gap-3 ${activeTab === 'ri' ? 'bg-aos-coral/10 text-aos-coral border-aos-coral/20' : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'}`}
-          >
-            <ArrowRightLeft className={`w-4 h-4 ${activeTab === 'ri' ? 'text-aos-coral' : 'text-slate-400'}`} /> RI Treaties (XOL)
-          </button>
-          <button 
-            onClick={() => setActiveTab('doc_policy')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium border transition-colors flex items-center gap-3 ${activeTab === 'doc_policy' ? 'bg-aos-blue/10 text-aos-blue border-aos-blue/20' : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'}`}
-          >
-            <FileCode2 className={`w-4 h-4 ${activeTab === 'doc_policy' ? 'text-aos-blue' : 'text-slate-400'}`} /> Policy Docs Setup
-          </button>
-          <button 
-            onClick={() => setActiveTab('doc_claims')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium border transition-colors flex items-center gap-3 ${activeTab === 'doc_claims' ? 'bg-aos-rose/10 text-aos-rose border-aos-rose/20' : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'}`}
-          >
-            <BookOpen className={`w-4 h-4 ${activeTab === 'doc_claims' ? 'text-aos-rose' : 'text-slate-400'}`} /> Claims Docs Setup
-          </button>
-          <button 
-            onClick={() => setActiveTab('gl_codes')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium border transition-colors flex items-center gap-3 ${activeTab === 'gl_codes' ? 'bg-aos-amber/10 text-aos-amber border-aos-amber/20' : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'}`}
-          >
-            <KeySquare className={`w-4 h-4 ${activeTab === 'gl_codes' ? 'text-aos-amber' : 'text-slate-400'}`} /> GL Transaction Codes
-          </button>
+        <div className="w-full md:w-72 flex flex-col gap-2 shrink-0 h-full overflow-y-auto pr-2 custom-scrollbar">
+          {masterCategories.map((category) => {
+            const isExpanded = expandedCategories.includes(category.id);
+            const hasActiveChild = category.items.some(item => item.id === activeTab);
+            
+            return (
+              <div key={category.id} className="border border-slate-200 rounded-lg bg-white overflow-hidden shadow-sm">
+                <button
+                  onClick={() => toggleCategory(category.id)}
+                  className={`w-full flex items-center justify-between p-3 text-sm font-semibold transition-colors ${
+                    hasActiveChild ? 'bg-slate-50 text-aos-purple' : 'bg-white text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    {category.icon}
+                    {category.title}
+                  </div>
+                  {isExpanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
+                </button>
+                
+                {isExpanded && (
+                  <div className="bg-slate-50 border-t border-slate-100 p-1">
+                    {category.items.map(item => (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveTab(item.id)}
+                        className={`w-full text-left px-9 py-2 rounded-md text-sm transition-colors ${
+                          activeTab === item.id 
+                            ? 'bg-aos-purple/10 text-aos-purple font-medium' 
+                            : 'text-slate-600 hover:bg-slate-200/50 hover:text-slate-900'
+                        }`}
+                      >
+                        {item.title}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1">
+        <div className="flex-1 h-full overflow-y-auto pl-2">
           {activeTab === 'product' && (
             <Card className="shadow-sm border-slate-200 animate-in fade-in duration-300">
               <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-xl">
@@ -82,7 +176,7 @@ export default function MastersView() {
                 <span className="px-2.5 py-1 bg-slate-200 text-slate-600 text-xs font-medium rounded-md">Product: 5042 (Corporate Plus)</span>
               </div>
               <div className="p-6 space-y-8">
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <label className="block text-xs font-medium text-slate-500 mb-1">Target Database Table</label>
                     <input type="text" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm text-slate-700" value="PGIT_POL_RISK_ADDL_INFO" readOnly />
@@ -92,8 +186,12 @@ export default function MastersView() {
                     <input type="text" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm text-slate-700" value="PGIT_POL_RISK_ADDL_INFO_01" readOnly />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-500 mb-1">UI Label</label>
-                    <input type="text" className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm text-slate-900 focus:border-aos-purple outline-none" defaultValue="Risk Details" />
+                    <BilingualField 
+                      label="UI Label Mapping" 
+                      id="ui-label" 
+                      primaryPlaceholder="Risk Details" 
+                      secondaryPlaceholder="Maelezo ya Hatari" 
+                    />
                   </div>
                 </div>
 
@@ -573,6 +671,21 @@ export default function MastersView() {
                 </div>
 
               </div>
+            </Card>
+          )}
+
+          {!detailedTabs.includes(activeTab) && (
+            <Card className="shadow-sm border-slate-200 animate-in fade-in duration-300 h-full flex flex-col items-center justify-center p-12 text-center bg-slate-50/50">
+              <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4">
+                <Wrench className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">{getActiveTabTitle()}</h3>
+              <p className="text-slate-500 max-w-md">
+                This configuration module is currently under development. Detailed setup interfaces for this master will be available in the next release.
+              </p>
+              <button className="mt-6 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm">
+                View Database Schema
+              </button>
             </Card>
           )}
         </div>

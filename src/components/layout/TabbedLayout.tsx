@@ -2,11 +2,12 @@
 
 import { useTabStore, useNotificationStore, useUserStore, Tab } from "@/lib/store";
 import { useRouter } from "next/navigation";
-import { X, Plus, Bell, Search, Menu, Command } from 'lucide-react';
+import { X, Plus, Bell, Search, Menu, Command, Bot, Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Sidebar from "./Sidebar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CoPilotSidebar } from "../ai/CoPilotSidebar";
 
 export default function TabbedLayout({ children }: { children: React.ReactNode }) {
   const { tabs, activeTab, addTab, removeTab, setActiveTab } = useTabStore();
@@ -15,6 +16,8 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
   const router = useRouter();
   
   const [mounted, setMounted] = useState(false);
+  const [isCoPilotOpen, setIsCoPilotOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -34,6 +37,12 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
     addTab(newTab);
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    // In a real implementation, this would toggle a 'dark' class on the HTML/body element
+    // document.documentElement.classList.toggle('dark');
+  };
+
   // Prevent hydration mismatch for zustand stores
   if (!mounted) {
     return <div className="h-screen w-full bg-aos-navy flex items-center justify-center">
@@ -42,15 +51,15 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
   }
   
   return (
-    <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden font-sans">
+    <div className={`flex h-screen overflow-hidden font-sans ${isDarkMode ? 'dark bg-slate-900 text-white' : 'bg-slate-50 text-slate-900'}`}>
       {/* Persistent Sidebar */}
       <Sidebar />
       
       {/* Main Content Area */}
-      <div className="flex flex-col flex-1 min-w-0 bg-slate-50 overflow-hidden relative">
+      <div className={`flex flex-col flex-1 min-w-0 overflow-hidden relative ${isDarkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
         
         {/* Top Header Bar */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0 z-10 shadow-sm relative">
+        <header className={`h-16 border-b flex items-center justify-between px-6 shrink-0 z-10 shadow-sm relative ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
           
           {/* Search */}
           <div className="flex-1 max-w-xl">
@@ -59,10 +68,10 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
               <input 
                 type="text" 
                 placeholder="Search policies, claims, customers..." 
-                className="w-full pl-10 pr-12 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-aos-blue focus:ring-2 focus:ring-aos-blue-glow rounded-lg text-sm transition-all outline-none placeholder:text-slate-500"
+                className={`w-full pl-10 pr-12 py-2 border-transparent focus:border-aos-blue focus:ring-2 focus:ring-aos-blue-glow rounded-lg text-sm transition-all outline-none placeholder:text-slate-500 ${isDarkMode ? 'bg-slate-800 focus:bg-slate-800 text-white' : 'bg-slate-100 focus:bg-white text-slate-900'}`}
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-slate-200 bg-white text-[10px] font-medium text-slate-400">
+                <kbd className={`hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-medium ${isDarkMode ? 'border-slate-700 bg-slate-800 text-slate-400' : 'border-slate-200 bg-white text-slate-400'}`}>
                   <Command className="h-3 w-3" /> K
                 </kbd>
               </div>
@@ -79,6 +88,22 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
               </span>
               UAT ENV
             </div>
+
+            <button 
+              onClick={toggleDarkMode}
+              className={`p-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-aos-blue/30 ${isDarkMode ? 'hover:bg-slate-800 text-slate-400 hover:text-white' : 'hover:bg-slate-100 text-slate-500 hover:text-slate-700'}`}
+              title="Toggle Theme"
+            >
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+
+            <button 
+              onClick={() => setIsCoPilotOpen(true)}
+              className={`p-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/30 ${isDarkMode ? 'hover:bg-slate-800 text-slate-400 hover:text-indigo-400' : 'hover:bg-slate-100 text-slate-500 hover:text-indigo-600'}`}
+              title="Open CoPilot"
+            >
+              <Bot className="h-5 w-5" />
+            </button>
 
             {/* Notifications */}
             <Popover>
@@ -188,6 +213,11 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
             {children}
           </div>
         </main>
+        
+        <CoPilotSidebar 
+          isOpen={isCoPilotOpen} 
+          onClose={() => setIsCoPilotOpen(false)} 
+        />
       </div>
     </div>
   );

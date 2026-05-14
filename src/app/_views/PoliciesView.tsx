@@ -5,6 +5,7 @@ import { Shield, Search, Plus, Filter, FileText, CheckCircle2, XCircle, Clock } 
 import { PolicyDetailDrawer } from './components/PolicyDetailDrawer';
 import { IssuePolicyWizard } from './components/IssuePolicyWizard';
 import { QuotationWizard } from './components/QuotationWizard';
+import { RenewalEngine } from './components/RenewalEngine';
 
 export default function PoliciesView() {
   const [activeTab, setActiveTab] = useState('active');
@@ -13,11 +14,11 @@ export default function PoliciesView() {
   const [isQuotationOpen, setIsQuotationOpen] = useState(false);
 
   const policies = [
-    { id: "P11/2025/100/5042", insured: "Acme Corp Ltd", type: "Fire & Perils", premium: "TZS 4,500,000", status: "Active", startDate: "2025-01-01", endDate: "2025-12-31" },
-    { id: "P11/2025/100/5043", insured: "Global Industries", type: "Marine Cargo", premium: "TZS 12,200,000", status: "Pending Approval", startDate: "2025-02-15", endDate: "2026-02-14" },
-    { id: "P11/2025/100/5044", insured: "John Doe", type: "Motor Comprehensive", premium: "TZS 850,000", status: "Active", startDate: "2025-03-10", endDate: "2026-03-09" },
-    { id: "P11/2024/100/4012", insured: "Tech Solutions Inc", type: "Cyber Liability", premium: "TZS 2,100,000", status: "Expired", startDate: "2024-05-01", endDate: "2025-04-30" },
-    { id: "P11/2025/100/5045", insured: "City Construction", type: "Contractors All Risk", premium: "TZS 18,500,000", status: "Active", startDate: "2025-04-20", endDate: "2026-04-19" },
+    { id: "P11/2025/100/5042", insured: "Acme Corp Ltd", type: "Fire & Perils", premium: "TZS 4,500,000", status: "Active", startDate: "2025-01-01", endDate: "2025-12-31", tiraSync: 'Synced' },
+    { id: "P11/2025/100/5043", insured: "Global Industries", type: "Marine Cargo", premium: "TZS 12,200,000", status: "Pending Approval", startDate: "2025-02-15", endDate: "2026-02-14", tiraSync: 'Pending' },
+    { id: "P11/2025/100/5044", insured: "John Doe", type: "Motor Comprehensive", premium: "TZS 850,000", status: "Active", startDate: "2025-03-10", endDate: "2026-03-09", tiraSync: 'Synced' },
+    { id: "P11/2024/100/4012", insured: "Tech Solutions Inc", type: "Cyber Liability", premium: "TZS 2,100,000", status: "Expired", startDate: "2024-05-01", endDate: "2025-04-30", tiraSync: 'Synced' },
+    { id: "P11/2025/100/5045", insured: "City Construction", type: "Contractors All Risk", premium: "TZS 18,500,000", status: "Active", startDate: "2025-04-20", endDate: "2026-04-19", tiraSync: 'Pending' },
   ];
 
   return (
@@ -53,6 +54,7 @@ export default function PoliciesView() {
               <button onClick={() => setActiveTab('active')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'active' ? 'bg-white text-aos-blue shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}>Active</button>
               <button onClick={() => setActiveTab('pending')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'pending' ? 'bg-white text-aos-blue shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}>Pending</button>
               <button onClick={() => setActiveTab('expired')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'expired' ? 'bg-white text-aos-blue shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}>Expired</button>
+              <button onClick={() => setActiveTab('renewals')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'renewals' ? 'bg-white text-aos-blue shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}>Renewals Pipeline</button>
             </div>
             <div className="relative max-w-sm w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -64,6 +66,12 @@ export default function PoliciesView() {
             </div>
           </div>
           <div className="p-0">
+            {activeTab === 'renewals' ? (
+              <div className="p-4 bg-slate-50">
+                <RenewalEngine />
+              </div>
+            ) : (
+            <>
             <Table>
               <TableHeader className="bg-slate-50">
                 <TableRow>
@@ -73,6 +81,7 @@ export default function PoliciesView() {
                   <TableHead className="font-semibold text-slate-600">Gross Premium</TableHead>
                   <TableHead className="font-semibold text-slate-600">Period</TableHead>
                   <TableHead className="font-semibold text-slate-600">Status</TableHead>
+                  <TableHead className="font-semibold text-slate-600 text-center">TIRA Sync</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -116,20 +125,33 @@ export default function PoliciesView() {
                         </span>
                       )}
                     </TableCell>
+                    <TableCell className="text-center">
+                      {policy.tiraSync === 'Synced' ? (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-aos-blue/10 text-aos-blue" title="Synced to TIRA">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400" title="Pending TIRA Sync">
+                          <Clock className="w-3.5 h-3.5" />
+                        </span>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          </div>
-          <div className="p-4 border-t border-slate-100 bg-slate-50/50 rounded-b-xl flex items-center justify-between text-sm text-slate-500">
-            Showing 1 to 5 of 240 entries
-            <div className="flex gap-1">
-              <button className="px-3 py-1 rounded border border-slate-200 bg-white text-slate-400 cursor-not-allowed">Prev</button>
-              <button className="px-3 py-1 rounded border border-slate-200 bg-aos-blue text-white font-medium">1</button>
-              <button className="px-3 py-1 rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">2</button>
-              <button className="px-3 py-1 rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">3</button>
-              <button className="px-3 py-1 rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">Next</button>
+            <div className="p-4 border-t border-slate-100 bg-slate-50/50 rounded-b-xl flex items-center justify-between text-sm text-slate-500">
+              Showing 1 to 5 of 240 entries
+              <div className="flex gap-1">
+                <button className="px-3 py-1 rounded border border-slate-200 bg-white text-slate-400 cursor-not-allowed">Prev</button>
+                <button className="px-3 py-1 rounded border border-slate-200 bg-aos-blue text-white font-medium">1</button>
+                <button className="px-3 py-1 rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">2</button>
+                <button className="px-3 py-1 rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">3</button>
+                <button className="px-3 py-1 rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">Next</button>
+              </div>
             </div>
+            </>
+            )}
           </div>
         </Card>
       </div>

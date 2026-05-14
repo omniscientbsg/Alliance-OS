@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Drawer } from '@/components/ui/drawer';
-import { FileWarning, Calculator, Users, DollarSign, Activity } from 'lucide-react';
+import { FileWarning, Calculator, Users, DollarSign, Activity, FileText, Camera, ShieldAlert, List, Clock, Scale, ArrowUpRight, Archive, Car, Stethoscope, Landmark, Layers } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { SurveyManagementPanel } from './SurveyManagementPanel';
 
 interface ClaimDetailDrawerProps {
   isOpen: boolean;
@@ -23,15 +24,54 @@ export function ClaimDetailDrawer({ isOpen, onClose, claimId }: ClaimDetailDrawe
       size="xl"
     >
       <div className="flex flex-col md:flex-row gap-6 h-full">
-        <div className="w-full md:w-56 shrink-0 space-y-1">
-          <button onClick={() => setActiveTab('loss')} className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'loss' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+        <div className="w-full md:w-56 shrink-0 space-y-0.5 overflow-y-auto pr-2 pb-12">
+          <button onClick={() => setActiveTab('loss')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'loss' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
             <span className="flex items-center gap-2"><FileWarning className="w-4 h-4" /> Loss Details</span>
           </button>
-          <button onClick={() => setActiveTab('reserves')} className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'reserves' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <span className="flex items-center gap-2"><DollarSign className="w-4 h-4" /> Reserves & Payments</span>
+          <button onClick={() => setActiveTab('reserves')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'reserves' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><DollarSign className="w-4 h-4" /> Financials</span>
           </button>
-          <button onClick={() => setActiveTab('parties')} className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'parties' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+          <button onClick={() => setActiveTab('parties')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'parties' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
             <span className="flex items-center gap-2"><Users className="w-4 h-4" /> Involved Parties</span>
+          </button>
+          <button onClick={() => setActiveTab('survey')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'survey' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><Camera className="w-4 h-4" /> Survey Mgmt</span>
+          </button>
+          <button onClick={() => setActiveTab('documents')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'documents' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><FileText className="w-4 h-4" /> Documents</span>
+          </button>
+          <button onClick={() => setActiveTab('notes')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'notes' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><List className="w-4 h-4" /> Case Notes</span>
+          </button>
+          <button onClick={() => setActiveTab('police')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'police' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><Car className="w-4 h-4" /> Police Report</span>
+          </button>
+          <button onClick={() => setActiveTab('medical')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'medical' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><Stethoscope className="w-4 h-4" /> Medical Reports</span>
+          </button>
+          <button onClick={() => setActiveTab('recovery')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'recovery' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><ArrowUpRight className="w-4 h-4" /> Subrogation</span>
+          </button>
+          <button onClick={() => setActiveTab('salvage')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'salvage' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><Archive className="w-4 h-4" /> Salvage Mgmt</span>
+          </button>
+          <button onClick={() => setActiveTab('payments')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'payments' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><Calculator className="w-4 h-4" /> Payment History</span>
+          </button>
+          <button onClick={() => setActiveTab('reinsurance')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'reinsurance' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><Layers className="w-4 h-4" /> Reinsurance</span>
+          </button>
+          <button onClick={() => setActiveTab('legal')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'legal' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><Scale className="w-4 h-4" /> Legal</span>
+          </button>
+          <button onClick={() => setActiveTab('litigation')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'litigation' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><Landmark className="w-4 h-4" /> Litigation</span>
+          </button>
+          <button onClick={() => setActiveTab('fraud')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'fraud' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><ShieldAlert className="w-4 h-4" /> Fraud & SIU</span>
+          </button>
+          <button onClick={() => setActiveTab('audit')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'audit' ? 'bg-aos-blue/10 text-aos-blue' : 'text-slate-600 hover:bg-slate-50'}`}>
+            <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> Audit Trail</span>
           </button>
         </div>
 
@@ -132,7 +172,7 @@ export function ClaimDetailDrawer({ isOpen, onClose, claimId }: ClaimDetailDrawe
                    <p className="text-base font-medium text-slate-900">TopMark Loss Adjusters Ltd</p>
                    <p className="text-sm text-slate-500">Report Status: Pending Final Review</p>
                  </div>
-                 <button className="px-3 py-1.5 text-sm font-medium text-aos-blue border border-aos-blue/20 rounded-lg hover:bg-aos-blue/5">View Report</button>
+                 <button onClick={() => setActiveTab('survey')} className="px-3 py-1.5 text-sm font-medium text-aos-blue border border-aos-blue/20 rounded-lg hover:bg-aos-blue/5">Go to Survey Mgmt</button>
               </Card>
               <Card className="p-4 border-slate-200 shadow-sm flex justify-between items-center">
                  <div>
@@ -141,6 +181,27 @@ export function ClaimDetailDrawer({ isOpen, onClose, claimId }: ClaimDetailDrawe
                  </div>
                  <button className="px-3 py-1.5 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50">Assign Now</button>
               </Card>
+            </div>
+          )}
+
+          {activeTab === 'survey' && (
+            <div className="animate-in fade-in duration-300">
+              <SurveyManagementPanel />
+            </div>
+          )}
+
+          {activeTab === 'documents' && (
+            <div className="flex flex-col items-center justify-center h-full py-12 text-slate-500 animate-in fade-in duration-300">
+              <FileText className="w-12 h-12 text-slate-300 mb-4" />
+              <p>No additional documents uploaded.</p>
+            </div>
+          )}
+
+          {activeTab === 'fraud' && (
+            <div className="flex flex-col items-center justify-center h-full py-12 text-slate-500 animate-in fade-in duration-300">
+              <ShieldAlert className="w-12 h-12 text-aos-emerald/50 mb-4" />
+              <h3 className="text-lg font-semibold text-slate-900 mb-1">No Fraud Indicators Detected</h3>
+              <p>The AI system scores this claim at 12/100 (Low Risk).</p>
             </div>
           )}
         </div>
