@@ -1,23 +1,26 @@
 "use client";
 
 import { useTabStore, useNotificationStore, useUserStore, Tab } from "@/lib/store";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { X, Plus, Bell, Search, Menu, Command, Bot, Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Sidebar from "./Sidebar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CoPilotSidebar } from "../ai/CoPilotSidebar";
+import { AllianceAIOmnibar, useOmnibar } from "../ai/AllianceAIOmnibar";
 
 export default function TabbedLayout({ children }: { children: React.ReactNode }) {
   const { tabs, activeTab, addTab, removeTab, setActiveTab } = useTabStore();
   const { notifications, unreadCount, markRead, markAllRead } = useNotificationStore();
   const { user } = useUserStore();
   const router = useRouter();
+  const pathname = usePathname();
   
   const [mounted, setMounted] = useState(false);
   const [isCoPilotOpen, setIsCoPilotOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const omnibar = useOmnibar();
 
   useEffect(() => {
     setMounted(true);
@@ -38,9 +41,9 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
   };
 
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    // In a real implementation, this would toggle a 'dark' class on the HTML/body element
-    // document.documentElement.classList.toggle('dark');
+    const next = !isDarkMode;
+    setIsDarkMode(next);
+    document.documentElement.classList.toggle('dark', next);
   };
 
   // Prevent hydration mismatch for zustand stores
@@ -61,21 +64,22 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
         {/* Top Header Bar */}
         <header className={`h-16 border-b flex items-center justify-between px-6 shrink-0 z-10 shadow-sm relative ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
           
-          {/* Search */}
+          {/* Omnibar Trigger */}
           <div className="flex-1 max-w-xl">
-            <div className="relative group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-aos-blue transition-colors" />
-              <input 
-                type="text" 
-                placeholder="Search policies, claims, customers..." 
-                className={`w-full pl-10 pr-12 py-2 border-transparent focus:border-aos-blue focus:ring-2 focus:ring-aos-blue-glow rounded-lg text-sm transition-all outline-none placeholder:text-slate-500 ${isDarkMode ? 'bg-slate-800 focus:bg-slate-800 text-white' : 'bg-slate-100 focus:bg-white text-slate-900'}`}
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                <kbd className={`hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-medium ${isDarkMode ? 'border-slate-700 bg-slate-800 text-slate-400' : 'border-slate-200 bg-white text-slate-400'}`}>
-                  <Command className="h-3 w-3" /> K
-                </kbd>
-              </div>
-            </div>
+            <button
+              onClick={() => window.dispatchEvent(new Event('open-omnibar'))}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all text-left group ${
+                isDarkMode ? 'bg-slate-800 hover:bg-slate-700 text-slate-400' : 'bg-slate-100 hover:bg-slate-200/70 text-slate-500'
+              }`}
+            >
+              <Search className="h-4 w-4 shrink-0" />
+              <span className="flex-1 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors">Search, navigate, or ask Alliance AI...</span>
+              <kbd className={`hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-medium ${
+                isDarkMode ? 'border-slate-600 bg-slate-700 text-slate-400' : 'border-slate-200 bg-white text-slate-400'
+              }`}>
+                <Command className="h-3 w-3" /> K
+              </kbd>
+            </button>
           </div>
 
           {/* Right Actions */}
@@ -208,8 +212,16 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
         </div>
 
         {/* Scrollable View Content */}
-        <main className="flex-1 overflow-y-auto bg-slate-50 p-6 page-enter relative">
-          <div className="max-w-7xl mx-auto">
+        <main className={cn(
+          "flex-1 overflow-y-auto page-enter relative",
+          isDarkMode ? 'bg-slate-900' : 'bg-slate-50',
+          // If we are on a specific claim canvas page, remove padding for full-bleed
+          pathname?.match(/\/claims\/C.*/) ? "p-0 overflow-hidden" : "p-6"
+        )}>
+          <div className={cn(
+            "mx-auto h-full",
+            pathname?.match(/\/claims\/C.*/) ? "max-w-none" : "max-w-7xl"
+          )}>
             {children}
           </div>
         </main>
@@ -217,6 +229,10 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
         <CoPilotSidebar 
           isOpen={isCoPilotOpen} 
           onClose={() => setIsCoPilotOpen(false)} 
+        />
+        <AllianceAIOmnibar 
+          isOpen={omnibar.isOpen} 
+          onClose={omnibar.close} 
         />
       </div>
     </div>

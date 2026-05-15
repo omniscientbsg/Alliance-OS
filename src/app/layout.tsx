@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import TabbedLayout from "@/components/layout/TabbedLayout";
+import Omnibar from "@/components/Omnibar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <TabbedLayout>
           {children}
         </TabbedLayout>
+        
       </body>
     </html>
   );

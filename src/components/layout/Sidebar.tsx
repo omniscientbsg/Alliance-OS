@@ -17,7 +17,10 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  Settings
+  Settings,
+  Sparkles,
+  Layers,
+  Database
 } from 'lucide-react';
 
 const navItems = [
@@ -38,10 +41,18 @@ const navItems = [
     ]
   },
   {
+    group: "Alliance AI",
+    ai: true,
+    items: [
+      { href: "/product-builder", label: "Product Builder", icon: Sparkles },
+      { href: "/migration", label: "Magic Import", icon: Database },
+      { href: "/masters", label: "System Setup", icon: Layers },
+    ]
+  },
+  {
     group: "Administration",
     items: [
       { href: "/customers", label: "Party Master", icon: Users },
-      { href: "/masters", label: "System Setup", icon: Building },
       { href: "/approvals", label: "Approvals", icon: FileCheck },
     ]
   },
@@ -111,7 +122,11 @@ export default function Sidebar() {
         {navItems.map((group, i) => (
           <div key={i} className="mb-6">
             {!collapsed && (
-              <div className="px-6 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <div className={cn(
+                "px-6 mb-2 text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5",
+                (group as any).ai ? "text-indigo-400" : "text-slate-500"
+              )}>
+                {(group as any).ai && <Sparkles className="w-3 h-3" />}
                 {group.group}
               </div>
             )}
