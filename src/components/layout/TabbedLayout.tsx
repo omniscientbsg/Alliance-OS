@@ -1,7 +1,7 @@
 "use client";
 
 import { useTabStore, useNotificationStore, useUserStore, Tab } from "@/lib/store";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { X, Plus, Bell, Search, Menu, Command, Bot, Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
   const { notifications, unreadCount, markRead, markAllRead } = useNotificationStore();
   const { user } = useUserStore();
   const router = useRouter();
+  const pathname = usePathname();
   
   const [mounted, setMounted] = useState(false);
   const [isCoPilotOpen, setIsCoPilotOpen] = useState(false);
@@ -66,7 +67,7 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
           {/* Omnibar Trigger */}
           <div className="flex-1 max-w-xl">
             <button
-              onClick={omnibar.open}
+              onClick={() => window.dispatchEvent(new Event('open-omnibar'))}
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all text-left group ${
                 isDarkMode ? 'bg-slate-800 hover:bg-slate-700 text-slate-400' : 'bg-slate-100 hover:bg-slate-200/70 text-slate-500'
               }`}
@@ -211,8 +212,16 @@ export default function TabbedLayout({ children }: { children: React.ReactNode }
         </div>
 
         {/* Scrollable View Content */}
-        <main className="flex-1 overflow-y-auto bg-slate-50 p-6 page-enter relative">
-          <div className="max-w-7xl mx-auto">
+        <main className={cn(
+          "flex-1 overflow-y-auto page-enter relative",
+          isDarkMode ? 'bg-slate-900' : 'bg-slate-50',
+          // If we are on a specific claim canvas page, remove padding for full-bleed
+          pathname?.match(/\/claims\/C.*/) ? "p-0 overflow-hidden" : "p-6"
+        )}>
+          <div className={cn(
+            "mx-auto h-full",
+            pathname?.match(/\/claims\/C.*/) ? "max-w-none" : "max-w-7xl"
+          )}>
             {children}
           </div>
         </main>

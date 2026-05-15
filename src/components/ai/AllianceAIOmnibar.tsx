@@ -7,6 +7,8 @@ import {
   ChevronRight, Command, X
 } from 'lucide-react';
 
+import { useRouter } from 'next/navigation';
+
 interface OmnibarProps {
   isOpen: boolean;
   onClose: () => void;
@@ -21,6 +23,7 @@ type Action = {
   iconColor: string;
   shortcut?: string;
   aiPowered?: boolean;
+  route?: string;
 };
 
 const ACTIONS: Action[] = [
@@ -37,7 +40,7 @@ const ACTIONS: Action[] = [
 
   // Quick Actions — Claims
   { id: 'register-fnol', label: 'Register FNOL', description: 'Log a new First Notice of Loss', category: 'Claims', icon: FileText, iconColor: 'text-aos-rose', shortcut: 'F' },
-  { id: 'search-claim', label: 'Search Claim', description: 'Find a claim by reference or insured', category: 'Claims', icon: Search, iconColor: 'text-aos-rose' },
+  { id: 'search-claim', label: 'C11/100/1002/2026/011702 - John Kimaro', description: 'Open Claim Canvas for C11-1002', category: 'Claims', icon: Search, iconColor: 'text-aos-rose', route: '/claims/C11-1002' },
   { id: 'settle-claim', label: 'Process Settlement', description: 'Initiate STP or manual settlement workflow', category: 'Claims', icon: CheckCircle2, iconColor: 'text-aos-emerald' },
 
   // Quick Actions — Finance
@@ -61,6 +64,7 @@ export function AllianceAIOmnibar({ isOpen, onClose }: OmnibarProps) {
   const [query, setQuery] = useState('');
   const [selectedIdx, setSelectedIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const filteredActions = query.length > 0
     ? ACTIONS.filter(a =>
@@ -82,8 +86,14 @@ export function AllianceAIOmnibar({ isOpen, onClose }: OmnibarProps) {
     if (e.key === 'ArrowDown') { e.preventDefault(); setSelectedIdx(i => Math.min(i + 1, filteredActions.length - 1)); }
     if (e.key === 'ArrowUp') { e.preventDefault(); setSelectedIdx(i => Math.max(i - 1, 0)); }
     if (e.key === 'Escape') onClose();
-    if (e.key === 'Enter') { onClose(); }
-  }, [filteredActions.length, onClose]);
+    if (e.key === 'Enter') { 
+      const selected = filteredActions[selectedIdx];
+      if (selected && selected.route) {
+        router.push(selected.route);
+      }
+      onClose(); 
+    }
+  }, [filteredActions, selectedIdx, onClose, router]);
 
   // Group filtered actions by category
   const grouped = filteredActions.reduce<Record<string, Action[]>>((acc, action) => {
@@ -182,7 +192,12 @@ export function AllianceAIOmnibar({ isOpen, onClose }: OmnibarProps) {
                 <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest px-2 mb-2">{category}</p>
                 {actions.map((action, idx) => {
                   const globalIdx = filteredActions.indexOf(action);
-                  return <ActionRow key={action.id} action={action} isSelected={selectedIdx === globalIdx} onClick={onClose} />;
+                  return <ActionRow key={action.id} action={action} isSelected={selectedIdx === globalIdx} onClick={() => {
+                    if (action.route) {
+                      router.push(action.route);
+                    }
+                    onClose();
+                  }} />;
                 })}
               </div>
             ))}
