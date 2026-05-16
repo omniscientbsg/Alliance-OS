@@ -29,7 +29,8 @@ export type EntityType =
   | 'journal' 
   | 'treaty' 
   | 'customer_master'
-  | 'ri_allocation';
+  | 'ri_allocation'
+  | 'product_version';
 
 export interface WorkflowConfig {
   entityType: EntityType;
@@ -128,6 +129,12 @@ export const WORKFLOW_CONFIGS: Record<EntityType, WorkflowConfig> = {
     authorizationType: 'horizontal_any',
     requiresApproval: true,
     approvalLevels: 1,
+  },
+  product_version: {
+    entityType: 'product_version',
+    authorizationType: 'sequential',
+    requiresApproval: true,
+    approvalLevels: 2, // Needs underwriting manager approval
   },
 };
 

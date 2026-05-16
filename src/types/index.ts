@@ -22,7 +22,7 @@ export type Customer = z.infer<typeof CustomerSchema>;
 export const PolicySchema = z.object({
   id: z.string(),
   customerId: z.string(),
-  productCode: z.string(),
+  productVersionId: z.string().uuid(),
   productName: z.string(),
   status: z.enum(["Active", "Pending Bind", "Lapsed", "Cancelled"]),
   inceptionDate: z.string(),
