@@ -7,6 +7,7 @@ import {
   AlertTriangle, CheckCircle2, Bot, ArrowRight, Car, 
   Paperclip, Activity, Zap, Check, Building
 } from 'lucide-react';
+import { TrapdoorModal } from '@/components/shared/TrapdoorModal';
 
 const MOCK_DB: Record<string, any> = {
   '011702': { insured: 'John Kimaro', product: 'Motor Comprehensive', vehicle: 'Toyota Hilux 2.4 GD-6', reg: 'T 412 EFZ', policy: 'P11/2026/100/5042', icon: User, initials: 'JK', reserve: 'TZS 1,200,000', fraud: 12, risk: 'Low Risk', fraudColor: 'text-emerald-500 bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800', status: 'Assessment Pending', step: 3, assetIcon: Car },
@@ -18,6 +19,7 @@ const MOCK_DB: Record<string, any> = {
 export default function ClaimCanvasView({ claimId }: { claimId: string }) {
   const router = useRouter();
   const [extractionApproved, setExtractionApproved] = useState(false);
+  const [showTrapdoor, setShowTrapdoor] = useState(false);
 
   // Extract trailing ID
   const shortId = claimId.split('/').pop()?.split('-').pop() || '011702';
@@ -64,7 +66,12 @@ export default function ClaimCanvasView({ claimId }: { claimId: string }) {
             <AlertTriangle className="w-3.5 h-3.5" />
             Fraud Score: {data.fraud}/100 ({data.risk})
           </div>
-          <button className={`${data.fraud > 80 ? 'bg-rose-600 hover:bg-rose-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-colors shadow-sm`}>
+          <button 
+            onClick={() => {
+              if(data.fraud <= 80) setShowTrapdoor(true);
+            }}
+            className={`${data.fraud > 80 ? 'bg-rose-600 hover:bg-rose-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-colors shadow-sm`}
+          >
             {data.fraud > 80 ? 'Escalate to SIU' : 'Approve & Settle'}
           </button>
         </div>
@@ -272,6 +279,12 @@ export default function ClaimCanvasView({ claimId }: { claimId: string }) {
         </aside>
 
       </div>
+      
+      <TrapdoorModal 
+        isOpen={showTrapdoor} 
+        onClose={() => setShowTrapdoor(false)} 
+        title="Executing Claim Settlement..." 
+      />
     </div>
   );
 }

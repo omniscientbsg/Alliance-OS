@@ -39,30 +39,31 @@ export default function ClaimsListView() {
           <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
             <Filter className="w-4 h-4" /> Filter
           </button>
-          <button className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
-            <FileText className="w-4 h-4" /> New Claim
-          </button>
+          <Link href="/claims/new">
+            <button className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
+              <FileText className="w-4 h-4" /> New Claim
+            </button>
+          </Link>
         </div>
       </div>
+
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
-          { label: 'Open Claims', value: '432', sub: '+12 this week' },
-          { label: 'AI Auto-Triaged', value: '84%', sub: 'Last 30 days', color: 'text-indigo-500' },
+          { label: 'Total Open Claims', value: '142', sub: '+12 this week' },
+          { label: 'Pending Assessment', value: '38', sub: 'Action required', color: 'text-amber-500' },
           { label: 'Avg Cycle Time', value: '2.4 days', sub: '-1.1 days vs LY', color: 'text-emerald-500' },
           { label: 'SIU Referrals', value: '14', sub: 'Action required', color: 'text-rose-500' },
         ].map((kpi, i) => (
           <Card key={i} className="p-4 bg-white dark:bg-[#0f172a] border-slate-200 dark:border-slate-800 shadow-sm">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">{kpi.label}</p>
-            <p className={`text-2xl font-bold ${kpi.color || 'text-slate-900 dark:text-slate-100'}`}>{kpi.value}</p>
+            <p className={`text-2xl font-bold ${kpi.color || "text-slate-900 dark:text-slate-100"}`}>{kpi.value}</p>
             <p className="text-[10px] text-slate-400 mt-1">{kpi.sub}</p>
           </Card>
         ))}
       </div>
-
-      {/* Claims Data Grid */}
-      <Card className="bg-white dark:bg-[#0f172a] border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
             <thead className="bg-slate-50 dark:bg-slate-900/50 text-xs uppercase font-semibold text-slate-500 border-b border-slate-200 dark:border-slate-800">
@@ -111,7 +112,7 @@ export default function ClaimsListView() {
                       href={`/claims/${claim.id.replace(/\//g, '-')}`}
                       className="text-xs font-bold text-indigo-600 dark:text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity hover:underline"
                     >
-                      Open Canvas →
+                      Open Canvas
                     </Link>
                   </td>
                 </tr>
@@ -123,3 +124,4 @@ export default function ClaimsListView() {
     </div>
   );
 }
+

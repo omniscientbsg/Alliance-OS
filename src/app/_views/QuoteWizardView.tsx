@@ -8,16 +8,21 @@ import {
   Calculator, Settings, Mail, MessageSquare
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { TrapdoorModal } from '@/components/shared/TrapdoorModal';
 
 export default function QuoteWizardView() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [showTrapdoor, setShowTrapdoor] = useState(false);
   
   // States for interactivity
   const [isQuoting, setIsQuoting] = useState(false);
   const [quoteMode, setQuoteMode] = useState<'ai' | 'manual' | null>(null);
   const [selectedQuote, setSelectedQuote] = useState<number | null>(null);
   const [isSending, setIsSending] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [isCreatingClient, setIsCreatingClient] = useState(false);
+  const [clientName, setClientName] = useState('John Kimaro');
 
   // Manual Quote State
   const [manualCovers, setManualCovers] = useState({
@@ -100,40 +105,93 @@ export default function QuoteWizardView() {
         {/* STEP 1: Select Client */}
         {step === 1 && (
           <div className="p-8 animate-in fade-in slide-in-from-right-4 duration-300">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-6">Who is this policy for?</h2>
-            
-            <div className="relative mb-8">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-              <input 
-                autoFocus
-                type="text" 
-                placeholder="Search existing customers by Name, TIN, or Phone..." 
-                className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-aos-blue text-slate-900 dark:text-slate-100"
-              />
-            </div>
+            {!isCreatingClient ? (
+              <>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-6">Who is this policy for?</h2>
+                
+                <div className="relative mb-8">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                  <input 
+                    autoFocus
+                    type="text" 
+                    placeholder="Search existing customers by Name, TIN, or Phone..." 
+                    className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-aos-blue text-slate-900 dark:text-slate-100"
+                  />
+                </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div 
-                onClick={() => setStep(2)}
-                className="p-4 border border-slate-200 dark:border-slate-700 rounded-xl hover:border-aos-blue cursor-pointer transition-all hover:shadow-md flex items-start gap-4 group"
-              >
-                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                  <User className="w-5 h-5 text-slate-500" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div 
+                    onClick={() => {
+                      setClientName('John Kimaro');
+                      setStep(2);
+                    }}
+                    className="p-4 border border-slate-200 dark:border-slate-700 rounded-xl hover:border-aos-blue cursor-pointer transition-all hover:shadow-md flex items-start gap-4 group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                      <User className="w-5 h-5 text-slate-500" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-aos-blue">John Kimaro</p>
+                      <p className="text-xs text-slate-500 mb-2">Retail Client A +255 712 345 678</p>
+                      <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300">1 Active Policy</span>
+                    </div>
+                  </div>
+                  <div onClick={() => setIsCreatingClient(true)}
+                    className="p-4 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl hover:border-aos-blue hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-all flex flex-col items-center justify-center text-center group"
+                  >
+                    <User className="w-6 h-6 text-slate-400 group-hover:text-aos-blue mb-2" />
+                    <p className="text-sm font-bold text-slate-900 dark:text-slate-100">Create New Client</p>
+                    <p className="text-xs text-slate-500">Add a new retail or corporate entity</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-aos-blue">John Kimaro</p>
-                  <p className="text-xs text-slate-500 mb-2">Retail Client A +255 712 345 678</p>
-                  <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300">1 Active Policy</span>
+              </>
+            ) : (
+              <div className="animate-in slide-in-from-right-4 duration-300">
+                <div className="flex items-center gap-4 mb-6">
+                  <button onClick={() => setIsCreatingClient(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors">
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Create New Client</h2>
+                </div>
+
+                <div className="space-y-4 max-w-xl mb-8">
+                  <div>
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Full Name / Company Name *</label>
+                    <input 
+                      autoFocus
+                      type="text" 
+                      value={clientName === 'John Kimaro' ? '' : clientName}
+                      onChange={(e) => setClientName(e.target.value)}
+                      placeholder="e.g. Sarah Jenkins"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-sm focus:ring-2 focus:ring-aos-blue outline-none" 
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Phone Number</label>
+                      <input type="text" placeholder="+255..." className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-sm focus:ring-2 focus:ring-aos-blue outline-none" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">TIN Number</label>
+                      <input type="text" placeholder="123-456-789" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-sm focus:ring-2 focus:ring-aos-blue outline-none" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-start">
+                  <button 
+                    disabled={!clientName || clientName === 'John Kimaro'}
+                    onClick={() => {
+                      setStep(2);
+                      setIsCreatingClient(false);
+                    }} 
+                    className={`px-6 py-2 rounded-xl font-bold text-white flex items-center gap-2 transition-colors ${!clientName || clientName === 'John Kimaro' ? 'bg-slate-300 dark:bg-slate-700 cursor-not-allowed' : 'bg-aos-blue hover:bg-blue-700'}`}
+                  >
+                    Save & Continue <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
-              <div 
-                className="p-4 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl hover:border-aos-blue hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-all flex flex-col items-center justify-center text-center group"
-              >
-                <User className="w-6 h-6 text-slate-400 group-hover:text-aos-blue mb-2" />
-                <p className="text-sm font-bold text-slate-900 dark:text-slate-100">Create New Client</p>
-                <p className="text-xs text-slate-500">Add a new retail or corporate entity</p>
-              </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -342,7 +400,7 @@ export default function QuoteWizardView() {
                 <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-5 border border-slate-200 dark:border-slate-700 mb-6">
                   <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-4">Binding Summary</h3>
                   <div className="space-y-3 text-sm">
-                    <div className="flex justify-between"><span className="text-slate-500">Client</span><span className="font-medium dark:text-slate-200">John Kimaro</span></div>
+                    <div className="flex justify-between"><span className="text-slate-500">Client</span><span className="font-medium dark:text-slate-200">{clientName || 'John Kimaro'}</span></div>
                     <div className="flex justify-between"><span className="text-slate-500">Asset</span><span className="font-medium dark:text-slate-200">Toyota Land Cruiser (T 992 ABC)</span></div>
                     <div className="flex justify-between"><span className="text-slate-500">Mode</span><span className="font-medium dark:text-slate-200">{quoteMode === 'ai' ? 'AI Generated Tier' : 'Custom Built'}</span></div>
                     <div className="h-px bg-slate-200 dark:bg-slate-700 my-2" />
@@ -360,17 +418,17 @@ export default function QuoteWizardView() {
                   { id: 'mobile', name: 'Mobile Money (M-Pesa, Tigo)', icon: Zap },
                   { id: 'card', name: 'Credit / Debit Card', icon: CreditCard },
                 ].map((pm, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-aos-blue cursor-pointer">
-                    <input type="radio" name="payment" className="w-4 h-4 text-aos-blue" />
-                    <pm.icon className="w-5 h-5 text-slate-400" />
+                  <div key={i} onClick={() => setPaymentMethod(pm.id)} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer ${paymentMethod === pm.id ? "border-aos-blue bg-blue-50/50 dark:bg-blue-900/20" : "border-slate-200 dark:border-slate-700 hover:border-slate-300"}`}>
+                    <input type="radio" name="payment" checked={paymentMethod === pm.id} readOnly className="w-4 h-4 text-aos-blue" />
+                    <pm.icon className={`w-5 h-5 ${paymentMethod === pm.id ? "text-aos-blue" : "text-slate-400"}`} />
                     <span className="text-sm font-medium text-slate-900 dark:text-slate-100">{pm.name}</span>
                   </div>
                 ))}
 
-                <button 
-                  onClick={() => setStep(11)} // Success Bound
-                  className="w-full mt-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                >
+                <button
+                  disabled={!paymentMethod}
+                  onClick={() => setShowTrapdoor(true)}
+                  className={`w-full mt-4 py-3 font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 ${!paymentMethod ? "bg-slate-200 text-slate-400 dark:bg-slate-800 dark:text-slate-500 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700 text-white"}`}>
                   <Shield className="w-4 h-4" /> Receive Funds & Generate Policy
                 </button>
               </div>
@@ -386,7 +444,7 @@ export default function QuoteWizardView() {
             </div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">Quote Sent to Client</h2>
             <p className="text-slate-500 max-w-md mb-8">
-              Quotation <span className="font-bold text-slate-700 dark:text-slate-300">Q-2026-9812</span> has been saved as a Draft and emailed to John Kimaro. The pipeline status is now "Pending Acceptance".
+              Quotation <span className="font-bold text-slate-700 dark:text-slate-300">Q-2026-9812</span> has been saved as a Draft and emailed to {clientName || 'John Kimaro'}. The pipeline status is now "Pending Acceptance".
             </p>
             
             <div className="flex gap-4">
@@ -440,6 +498,25 @@ export default function QuoteWizardView() {
         )}
 
       </Card>
+      
+      <TrapdoorModal 
+        isOpen={showTrapdoor} 
+        onClose={() => setShowTrapdoor(false)} 
+        title="Binding Policy & Processing Payment..." 
+      />
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
