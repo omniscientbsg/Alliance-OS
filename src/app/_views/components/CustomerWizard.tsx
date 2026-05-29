@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { X, ChevronRight, CheckCircle2, User, Building, MapPin, Briefcase, FileText, Banknote, ShieldAlert } from 'lucide-react';
 import { BilingualField } from '@/components/shared/BilingualField';

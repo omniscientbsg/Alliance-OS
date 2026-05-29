@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Drawer } from '@/components/ui/drawer';
 import { User, Shield, Activity, Phone, Mail, MapPin, Briefcase, FileCheck, Building2, AlertTriangle, FileText, CheckCircle2, XCircle } from 'lucide-react';
