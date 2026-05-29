@@ -1,4 +1,4 @@
-import FinanceView from "../_views/FinanceView";
+import FinanceView from "@/app/_views/FinanceView";
 
 export default function FinancePage() {
   return <FinanceView />;

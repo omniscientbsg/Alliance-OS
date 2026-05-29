@@ -1,4 +1,4 @@
-import ProductBuilderView from "../_views/ProductBuilderView";
+import ProductBuilderView from "@/app/_views/ProductBuilderView";
 
 export default function ProductBuilderPage() {
   return <ProductBuilderView />;

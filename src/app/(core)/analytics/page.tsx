@@ -1,4 +1,4 @@
-import AnalyticsView from "../_views/AnalyticsView";
+import AnalyticsView from "@/app/_views/AnalyticsView";
 
 export default function AnalyticsPage() {
   return <AnalyticsView />;

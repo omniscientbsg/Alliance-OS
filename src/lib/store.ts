@@ -67,7 +67,7 @@ export const useSidebarStore = create<SidebarState>((set) => ({
 export interface UserProfile {
   id: string;
   name: string;
-  role: 'admin' | 'underwriter' | 'claims_handler' | 'finance' | 'reinsurance';
+  role: 'admin' | 'underwriter' | 'claims_handler' | 'finance' | 'reinsurance' | 'broker' | 'agent' | 'it_admin';
   branch: string;
   branchCode: string;
   avatar?: string;

@@ -1,4 +1,4 @@
-import ReinsuranceView from "../_views/ReinsuranceView";
+import ReinsuranceView from "@/app/_views/ReinsuranceView";
 
 export default function ReinsurancePage() {
   return <ReinsuranceView />;

@@ -1,4 +1,4 @@
-import FnolWizardView from "../../_views/FnolWizardView";
+import FnolWizardView from "@/app/_views/FnolWizardView";
 
 export default function NewClaimPage() {
   return <FnolWizardView />;

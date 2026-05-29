@@ -1,17 +1,17 @@
 "use client";
 
 import React from "react";
-import DashboardView from "../_views/DashboardView";
-import PoliciesView from "../_views/PoliciesView";
-import ClaimsView from "../_views/ClaimsView";
-import CustomersView from "../_views/CustomersView";
-import FinanceView from "../_views/FinanceView";
-import ReinsuranceView from "../_views/ReinsuranceView";
-import AnalyticsView from "../_views/AnalyticsView";
-import MastersView from "../_views/MastersView";
-import ApprovalsView from "../_views/ApprovalsView";
-import SettingsView from "../_views/SettingsView";
-import BrokerPortalView from "../_views/BrokerPortalView";
+import DashboardView from "@/app/_views/DashboardView";
+import PoliciesView from "@/app/_views/PoliciesView";
+import ClaimsView from "@/app/_views/ClaimsView";
+import CustomersView from "@/app/_views/CustomersView";
+import FinanceView from "@/app/_views/FinanceView";
+import ReinsuranceView from "@/app/_views/ReinsuranceView";
+import AnalyticsView from "@/app/_views/AnalyticsView";
+import MastersView from "@/app/_views/MastersView";
+import ApprovalsView from "@/app/_views/ApprovalsView";
+import SettingsView from "@/app/_views/SettingsView";
+import BrokerPortalView from "@/app/_views/BrokerPortalView";
 
 // We will render placeholders for unknown views for now
 const PlaceholderView = ({ title }: { title: string }) => (

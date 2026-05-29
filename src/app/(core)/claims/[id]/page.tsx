@@ -1,4 +1,4 @@
-import ClaimCanvasView from "../../_views/ClaimCanvasView";
+import ClaimCanvasView from "@/app/_views/ClaimCanvasView";
 
 export default async function ClaimPage({ params }: { params: Promise<{ id: string }> }) {
   // In Next.js 15+, params is a Promise

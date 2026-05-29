@@ -169,10 +169,10 @@ export default function Sidebar() {
             <Settings className={cn("shrink-0 h-5 w-5", collapsed ? "" : "mr-3")} />
             {!collapsed && <span>Settings</span>}
           </Link>
-          <button className="flex items-center justify-center lg:justify-start px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-400/10 rounded-lg transition-colors w-full">
+          <Link href="/login" className="flex items-center justify-center lg:justify-start px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-400/10 rounded-lg transition-colors w-full">
             <LogOut className={cn("shrink-0 h-5 w-5", collapsed ? "" : "mr-3")} />
             {!collapsed && <span>Log out</span>}
-          </button>
+          </Link>
         </div>
       </div>
     </aside>
